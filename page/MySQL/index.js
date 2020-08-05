@@ -20,9 +20,6 @@ connection.query(addSql, addSqlParams, function (err, result) {
    } else {
     console.log('--------------------------SELECT----------------------------');
      console.log(result);
-    //  for (key in result) {
-    //    console.log(result[key].id, result[key].name, result[key].password )
-    //  }
     console.log('------------------------------------------------------------\n\n');
    }
 });
