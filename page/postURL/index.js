@@ -1,6 +1,7 @@
 const http = require('http')
 const server = http.createServer()
 const qs = require('querystring')
+<<<<<<< HEAD
 var mysql = require('mysql')
 
 var connection = mysql.createConnection({
@@ -12,6 +13,10 @@ var connection = mysql.createConnection({
 }); 
  
 connection.connect();
+=======
+const mysql = require('mysql');
+
+>>>>>>> c34d41b72d82b69297c42dee22954f6f0c8b81f3
 
 server.on('request', function (request, response) {
   if (request.url !== './favicon.ico') {
@@ -33,6 +38,7 @@ server.on('request', function (request, response) {
     })
     // 监听数据读取完毕
     request.on('end', () => {
+<<<<<<< HEAD
       let paramStr1 = paramStr
       if (paramStr1 == '') {
       } else {
@@ -46,11 +52,33 @@ server.on('request', function (request, response) {
               msg: '注册失败',
               code: -1,
             }))
+=======
+      if (paramStr != '') {
+        paramStr1 = JSON.parse(paramStr)
+        console.log('2', paramStr1.name, paramStr1.password)
+ 
+        var connection = mysql.createConnection({
+          host: 'localhost',
+          user: 'root',
+          password : '1234567',
+          port: '3306',
+          database: 'test_library' 
+        }); 
+
+        connection.connect();
+
+        var  addSql = 'INSERT INTO login_information(id,name,password) VALUES(0,?,?)';
+        var  addSqlParams = [paramStr1.name, paramStr1.password];
+        connection.query(addSql, addSqlParams, function (err, result) {
+          if(err){
+            console.log('[SELECT ERROR] - ',err.message);
+>>>>>>> c34d41b72d82b69297c42dee22954f6f0c8b81f3
             return;
           } else {
             console.log('--------------------------SELECT----------------------------');
             console.log(result);
             console.log('------------------------------------------------------------\n\n');
+<<<<<<< HEAD
           }
         })
         res.end(JSON.stringify({
@@ -60,6 +88,18 @@ server.on('request', function (request, response) {
         }))
       }
     })
+=======
+            
+          }
+        });
+        connection.end();
+      }
+    })
+    response.end(JSON.stringify({
+      msg: 'success',
+      code: 0,
+    }))
+>>>>>>> c34d41b72d82b69297c42dee22954f6f0c8b81f3
   }
 })
 
