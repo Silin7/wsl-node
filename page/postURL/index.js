@@ -2,6 +2,7 @@ const http = require('http')
 const app = http.createServer()
 // const qs = require('querystring')
 const mysql = require('mysql');
+const { constants } = require('buffer');
 
 var connection = mysql.createConnection({
   host: 'localhost',
@@ -19,12 +20,11 @@ app.on('request', function (request, response) {
       // 指定了该响应的资源是否被允许与给定的origin共享 跨域
       'Access-Control-Allow-Origin': '*',
       // 明确了客户端所要访问的资源允许使用的方法或方法列表
-      // 'Access-Control-Allow-Methods': '*',
+      'Access-Control-Allow-Methods': '*',
       // 请求头中设置允许的请求方法
       'Access-Control-Allow-Headers': 'Content-Type',
       // 告诉客户端实际返回的内容的内容类型
       'Content-Type': 'application/json/text/html;charset=UTF-8',
-      // 'Access-Control-Allow-Credentials': 'true'
     })
     let paramStr = ''
     // 监听data实现获取post请求的数据
@@ -36,9 +36,17 @@ app.on('request', function (request, response) {
       if (paramStr != '') {
         paramStr1 = JSON.parse(paramStr)
         console.log('2', paramStr1.name, paramStr1.password)
-
+        var length = 'SELECT COUNT(*) FROM `login_information`'
         var  addSql = 'INSERT INTO login_information(id,name,password, number) VALUES(0,?,?,1)';
         var  addSqlParams = [paramStr1.name, paramStr1.password];
+        connection.query(length, function (err, result) {
+          if (err) {
+            console.log(err)
+          } else {
+            console.log(result)
+            console.log('values', Object.values(result[0])[0])
+          }
+        })
         connection.query(addSql, addSqlParams, function (err, result) {
           if(err){
             console.log('[SELECT ERROR] - ',err.message);
