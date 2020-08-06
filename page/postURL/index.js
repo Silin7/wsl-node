@@ -1,8 +1,7 @@
 const http = require('http')
-const server = http.createServer()
-const qs = require('querystring')
-<<<<<<< HEAD
-var mysql = require('mysql')
+const app = http.createServer()
+// const qs = require('querystring')
+const mysql = require('mysql');
 
 var connection = mysql.createConnection({
   host: 'localhost',
@@ -11,14 +10,10 @@ var connection = mysql.createConnection({
   port: '3306',
   database: 'test_library' 
 }); 
- 
+
 connection.connect();
-=======
-const mysql = require('mysql');
 
->>>>>>> c34d41b72d82b69297c42dee22954f6f0c8b81f3
-
-server.on('request', function (request, response) {
+app.on('request', function (request, response) {
   if (request.url !== './favicon.ico') {
     response.writeHead(200, {
       // 指定了该响应的资源是否被允许与给定的origin共享 跨域
@@ -38,71 +33,42 @@ server.on('request', function (request, response) {
     })
     // 监听数据读取完毕
     request.on('end', () => {
-<<<<<<< HEAD
-      let paramStr1 = paramStr
-      if (paramStr1 == '') {
-      } else {
-        let urlmsg = JSON.parse(paramStr1)
-        var addSql = 'INSERT INTO login_information(id,name,password,number) VALUES(0,?,?,1)';
-        var addSqlParams = [urlmsg.name, urlmsg.password];
-        connection.query(addSql, addSqlParams, function (err, result) {
-          if(err){
-            console.log('[SELECT ERROR] - ', err.message);
-            res.end(JSON.stringify({
-              msg: '注册失败',
-              code: -1,
-            }))
-=======
       if (paramStr != '') {
         paramStr1 = JSON.parse(paramStr)
         console.log('2', paramStr1.name, paramStr1.password)
- 
-        var connection = mysql.createConnection({
-          host: 'localhost',
-          user: 'root',
-          password : '1234567',
-          port: '3306',
-          database: 'test_library' 
-        }); 
 
-        connection.connect();
-
-        var  addSql = 'INSERT INTO login_information(id,name,password) VALUES(0,?,?)';
+        var  addSql = 'INSERT INTO login_information(id,name,password, number) VALUES(0,?,?,1)';
         var  addSqlParams = [paramStr1.name, paramStr1.password];
         connection.query(addSql, addSqlParams, function (err, result) {
           if(err){
             console.log('[SELECT ERROR] - ',err.message);
->>>>>>> c34d41b72d82b69297c42dee22954f6f0c8b81f3
+            response.end(JSON.stringify({
+              msg: '注册失败',
+              code: -1,
+            }))
             return;
           } else {
+            response.end(JSON.stringify({
+              msg: 'success',
+              code: 0,
+            }))
             console.log('--------------------------SELECT----------------------------');
             console.log(result);
             console.log('------------------------------------------------------------\n\n');
-<<<<<<< HEAD
-          }
-        })
-        res.end(JSON.stringify({
-          msg: 'success',
-          code: 0,
-          result: result
-        }))
-      }
-    })
-=======
-            
           }
         });
         connection.end();
+      } else {
+        response.end(JSON.stringify({
+          msg: 'options',
+          code: 1,
+        }))
       }
     })
-    response.end(JSON.stringify({
-      msg: 'success',
-      code: 0,
-    }))
->>>>>>> c34d41b72d82b69297c42dee22954f6f0c8b81f3
+    
   }
 })
 
-server.listen(8088, function () {
+app.listen(8088, function () {
   console.log('服务器启动成功：')
 })
