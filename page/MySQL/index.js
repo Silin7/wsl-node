@@ -10,8 +10,8 @@ var connection = mysql.createConnection({
  
 connection.connect();
  
-var  addSql = 'INSERT INTO login_information(id,name,password) VALUES(0,?,?)';
-var  addSqlParams = ['silin4.wang', '333333'];
+var  addSql = 'INSERT INTO login_information(id,name,password, number) VALUES(0,?,?,?)';
+var  addSqlParams = ['silin4.wang', '333333', '01'];
 //查
 connection.query(addSql, addSqlParams, function (err, result) {
    if(err){
