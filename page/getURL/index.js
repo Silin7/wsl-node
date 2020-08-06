@@ -20,7 +20,7 @@ const app = http.createServer(function (req, res) {
       'Access-Control-Allow-Origin': '*', // 跨域
     })
     let urlmsg = url.parse(req.url, true)
-    var  addSql = 'INSERT INTO login_information(id,name,password) VALUES(0,?,?)';
+    var  addSql = 'INSERT INTO login_information(id,name,password,number) VALUES(0,?,?,1)';
     var  addSqlParams = [urlmsg.query.name, urlmsg.query.password];
     connection.query(addSql, addSqlParams, function (err, result) {
       if(err){

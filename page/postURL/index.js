@@ -1,6 +1,17 @@
 const http = require('http')
 const server = http.createServer()
 const qs = require('querystring')
+var mysql = require('mysql')
+
+var connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password : '123456',
+  port: '3306',
+  database: 'test_library' 
+}); 
+ 
+connection.connect();
 
 server.on('request', function (request, response) {
   if (request.url !== './favicon.ico') {
@@ -19,21 +30,36 @@ server.on('request', function (request, response) {
     // 监听data实现获取post请求的数据
     request.on('data', data => {
       paramStr += data//分批读取post请求传递过来的数据
-      console.log('1', paramStr)
-      console.log('1', JSON.parse(paramStr))
     })
     // 监听数据读取完毕
-    if (paramStr1.length > 0) {
-      request.on('end', () => {
-        // let paramStr1 = qs.parse(paramStr)
-        let paramStr1 = JSON.parse(paramStr)
-        console.log('2', paramStr1)
-      })
-    }
-    response.end(JSON.stringify({
-      msg: 'success',
-      code: 0,
-    }))
+    request.on('end', () => {
+      let paramStr1 = paramStr
+      if (paramStr1 == '') {
+      } else {
+        let urlmsg = JSON.parse(paramStr1)
+        var addSql = 'INSERT INTO login_information(id,name,password,number) VALUES(0,?,?,1)';
+        var addSqlParams = [urlmsg.name, urlmsg.password];
+        connection.query(addSql, addSqlParams, function (err, result) {
+          if(err){
+            console.log('[SELECT ERROR] - ', err.message);
+            res.end(JSON.stringify({
+              msg: '注册失败',
+              code: -1,
+            }))
+            return;
+          } else {
+            console.log('--------------------------SELECT----------------------------');
+            console.log(result);
+            console.log('------------------------------------------------------------\n\n');
+          }
+        })
+        res.end(JSON.stringify({
+          msg: 'success',
+          code: 0,
+          result: result
+        }))
+      }
+    })
   }
 })
 
