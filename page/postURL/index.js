@@ -36,7 +36,7 @@ app.on('request', function (request, response) {
       if (paramStr != '') {
         paramStr1 = JSON.parse(paramStr)
         console.log('2', paramStr1.name, paramStr1.password)
-        var length = 'SELECT COUNT(*) FROM `login_information`'
+        var length = 'SELECT COUNT(*) AS K FROM `login_information`'
         var  addSql = 'INSERT INTO login_information(id,name,password, number) VALUES(0,?,?,1)';
         var  addSqlParams = [paramStr1.name, paramStr1.password];
         connection.query(length, function (err, result) {
@@ -44,7 +44,7 @@ app.on('request', function (request, response) {
             console.log(err)
           } else {
             console.log(result)
-            console.log('values', Object.values(result[0])[0])
+            console.log(result[0].K)
           }
         })
         connection.query(addSql, addSqlParams, function (err, result) {
