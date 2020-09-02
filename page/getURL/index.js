@@ -14,13 +14,13 @@ var connection = mysql.createConnection({
 connection.connect();
 
 app.on('request', function (request, response) {
-  if (request.url !== './favicon.ico') {
+  let urlmsg = url.parse(request.url, true)
+  if (urlmsg.pathname === '/login/get') {
     response.writeHead(200, {
       'Access-Control-Allow-Origin': '*', // 跨域
       'Access-Control-Allow-Headers': 'Content-Type',
       'Content-Type': 'application/json/text/html;charset=UTF-8',
     })
-    let urlmsg = url.parse(request.url, true)
     var addSql = 'INSERT INTO login_information(id,name,password,number) VALUES(0,?,?,1)';
     var addSqlParams = [urlmsg.query.name, urlmsg.query.password];
     connection.query(addSql, addSqlParams, function (err, result) {
@@ -32,17 +32,17 @@ app.on('request', function (request, response) {
         }))
         return;
       } else {
-      // response.end响应： 必须写，格式必须为字符串
-      response.end(JSON.stringify({
-        msg: 'success',
-        code: 0,
-        result: result
-      }))
-      console.log('--------------------------SELECT----------------------------');
-      console.log(result);
-      console.log('------------------------------------------------------------\n\n');
+        // response.end响应： 必须写，格式必须为字符串
+        response.end(JSON.stringify({
+          msg: 'success',
+          code: 0,
+          result: result
+        }))
+        console.log('--------------------------SELECT----------------------------');
+        console.log(result);
+        console.log('------------------------------------------------------------\n\n');
       }
-   });
+    });
   }
 })
 

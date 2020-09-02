@@ -15,7 +15,8 @@ var connection = mysql.createConnection({
 connection.connect();
 
 app.on('request', function (request, response) {
-  if (request.url !== './favicon.ico') {
+  console.log(request.url)
+  if (request.url === '/login/post') {
     response.writeHead(200, {
       // 指定了该响应的资源是否被允许与给定的origin共享 跨域
       'Access-Control-Allow-Origin': '*',
