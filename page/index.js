@@ -1,39 +1,38 @@
 const http = require("http")
-var mysql = require('mysql');
+const path = require("path")
+const url = require("url")
+const fs = require("fs")
 
+const app = http.createServer()
 
-const app = http.createServer(function (req, res) {
-  if (req.url !== "./favicon.ico") {
-    res.writeHead(200,{
-      "Content-Type": "text/html;charset=UTF-8"
-    })
-    // 
-    console.log('start')
-    var connection = mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password : '123456',
-      port: '8088',
-      database: 'test_library' 
-    }); 
-    connection.connect();
-    var sql = 'SELECT * FROM `login_information` WHERE 1';
-    //查
-    connection.query(sql, function (err, result) {
-      if(err){
-        console.log('[SELECT ERROR] - ',err.message);
-        return;
+app.on('request', function (request, response) {
+  response.writeHead(200,{
+    "Content-Type": "text/html;charset=UTF-8"
+  })
+  if (request.url !== "./favicon.ico") {
+    let pathName = url.parse(request.url, true).pathname
+    let urlPath = path.join(__dirname, "public", pathName)
+    fs.readFile(urlPath, (err, data) => {
+      console.log(data)
+      console.log(data.toString())
+      if (err) {
+        response.end(JSON.stringify({
+          msg: err,
+          code: -1,
+        }))
+      } else {
+        response.end(JSON.stringify({
+          msg: 'success',
+          code: 0,
+          data: data.toString()
+        }))
       }
-      console.log(result);
-      connection.end();
-    });
-    console.log('end')
-    // 
-    res.end(JSON.stringify({
-      msg: 'success',
-      code: 0,
-    }))
+    })
+
+    
   }
 })
 
-app.listen(8088)
+app.listen(8088, function () {
+  console.log('服务器启动成功......')
+})
