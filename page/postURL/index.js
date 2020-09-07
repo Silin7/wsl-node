@@ -79,5 +79,5 @@ app.on('request', function (request, response) {
 })
 
 app.listen(8088, function () {
-  console.log('服务器启动成功：')
+  console.log('服务器启动成功......')
 })
